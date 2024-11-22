@@ -26,21 +26,83 @@ public class GUI2 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        output = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        prompt = new javax.swing.JTextPane();
+        terminar = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        chats = new javax.swing.JList<>();
+        jButton1 = new javax.swing.JButton();
+        btnjuego = new javax.swing.JButton();
+        btnhistorial = new javax.swing.JButton();
+        btnborrar = new javax.swing.JButton();
+        btn_prompt = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 331, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 267, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setText("Ollama Chatbot");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, 160, -1));
+
+        output.setColumns(20);
+        output.setForeground(new java.awt.Color(255, 255, 255));
+        output.setRows(5);
+        jScrollPane1.setViewportView(output);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 550, 480));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 540, 310, -1));
+
+        jLabel3.setText("Introduce tu texto aqui:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 540, 240, -1));
+
+        jScrollPane2.setViewportView(prompt);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 570, 460, -1));
+
+        terminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/save.png"))); // NOI18N
+        terminar.setText("Save");
+        getContentPane().add(terminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 563, 80, 30));
+
+        chats.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chatsMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(chats);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 90, 540));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/recycle-bin.png"))); // NOI18N
+        jButton1.setText("Delete");
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 100, -1));
+
+        btnjuego.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/game-console.png"))); // NOI18N
+        btnjuego.setText("Abrir Juego");
+        getContentPane().add(btnjuego, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 430, 130, 50));
+
+        btnhistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/chat.png"))); // NOI18N
+        btnhistorial.setText("History");
+        getContentPane().add(btnhistorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 490, 130, -1));
+
+        btnborrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/data-cleaning.png"))); // NOI18N
+        btnborrar.setText("Clean");
+        getContentPane().add(btnborrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 130, -1));
+
+        btn_prompt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/juego/send-message.png"))); // NOI18N
+        btn_prompt.setText("Send");
+        getContentPane().add(btn_prompt, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 570, 130, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void chatsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chatsMouseClicked
+        
+    }//GEN-LAST:event_chatsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -78,5 +140,20 @@ public class GUI2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_prompt;
+    private javax.swing.JButton btnborrar;
+    private javax.swing.JButton btnhistorial;
+    private javax.swing.JButton btnjuego;
+    private javax.swing.JList<String> chats;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea output;
+    private javax.swing.JTextPane prompt;
+    private javax.swing.JButton terminar;
     // End of variables declaration//GEN-END:variables
 }
