@@ -7,9 +7,9 @@ public class Juego {
 
     public static void main(String[] args) {
         
-        GUI2 main = new GUI2();
-        main.setVisible(true);
-        main.setSize(562, 347);
+        GUI2 frame = new GUI2();
+        frame.setVisible(true);
+       
         
         System.out.println("Hello World!");
         
