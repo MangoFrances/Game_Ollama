@@ -9,7 +9,7 @@ public class Juego {
         
         GUI2 main = new GUI2();
         main.setVisible(true);
-        main.setSize(855, 617);
+        main.setSize(562, 347);
         
         System.out.println("Hello World!");
         

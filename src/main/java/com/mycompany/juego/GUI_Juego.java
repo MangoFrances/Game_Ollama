@@ -174,7 +174,7 @@ public class GUI_Juego extends javax.swing.JFrame {
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/isla.gif"))); // NOI18N
         fondo.setText("jLabel2");
-        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 490));
+        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 850, 530));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
