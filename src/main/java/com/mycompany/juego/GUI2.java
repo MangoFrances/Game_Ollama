@@ -417,7 +417,7 @@ public static String ollama(String nombremodelo, String promptText) {
             return "Error de conexión: " + e.getMessage();
         }
     }
-
+    /* esto genera un error nose por que -miguel
     private static String errorHandler(int code) {
         switch (code) {
             case 400:
@@ -436,6 +436,7 @@ public static String ollama(String nombremodelo, String promptText) {
                 return null;
         }
     }
+    */
     public String[] getChats2() {
         return chats2.clone();
     }
