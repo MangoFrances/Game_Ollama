@@ -14,10 +14,12 @@ import javax.swing.JOptionPane;
  * @author migue
  */
 public class GUI_Juego extends javax.swing.JFrame {
-
+ 
     
     public GUI_Juego() {
+       
         initComponents();
+
         // Configurar colores de selección
         matriz.setSelectionBackground(Color.YELLOW);  // Fondo de la celda seleccionada
         matriz.setSelectionForeground(Color.BLACK);   // Color del texto de la celda seleccionada
@@ -44,11 +46,12 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
              System.out.println("");
           }
+                
          matriz.setCellSelectionEnabled(false);
          matriz.setRowSelectionAllowed(false);
          matriz.setColumnSelectionAllowed(false);   
          matriz.setDefaultEditor(Object.class, null);
-         
+        
     }
 
     /**
@@ -438,7 +441,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private void moverJugador(int dRow, int dColumn) {
         int newRow = row + dRow;
         int newColumn = column + dColumn;
-
+       
         //esto verifica que la nueva posición esté dentro de los límites del JTable
         if (newRow >= 0 && newRow < matriz.getRowCount() && newColumn >= 0 && newColumn < matriz.getColumnCount()) {
                        
@@ -453,8 +456,18 @@ public class GUI_Juego extends javax.swing.JFrame {
             
             //las variables row y column indican la posición actual del jugador
             System.out.println("El jugador llegó a la posición (" + row + ", " + column + ") con valor: " + cellValue);
-        }       
+                  int ct=0;
+        
+         if(cellValue==2){
+                ct=ct+1;
+            }
+             String tes;
+             tes=String.valueOf(ct);
+             tesoros.setText(tes);
     }
+    
+        }
+                 
     
     
     /**
