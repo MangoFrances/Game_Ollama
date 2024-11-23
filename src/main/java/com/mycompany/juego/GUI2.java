@@ -72,7 +72,7 @@ public class GUI2 extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         GUI_Juego frame2 = new GUI_Juego();
         this.dispose();
-        frame2.setSize(872, 575);
+        frame2.setSize(872, 585);
         frame2.setVisible(true);
         
     }//GEN-LAST:event_jButton1MouseClicked

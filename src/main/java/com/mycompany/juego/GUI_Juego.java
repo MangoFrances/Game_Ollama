@@ -4,7 +4,10 @@
  */
 package com.mycompany.juego;
 
+
+import java.awt.Color;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -15,6 +18,12 @@ public class GUI_Juego extends javax.swing.JFrame {
     
     public GUI_Juego() {
         initComponents();
+        // Configurar colores de selección
+        matriz.setSelectionBackground(Color.YELLOW);  // Fondo de la celda seleccionada
+        matriz.setSelectionForeground(Color.BLACK);   // Color del texto de la celda seleccionada
+
+    // Inicializar selección en la posición (0, 0)
+        matriz.changeSelection(row, column, false, false);
         String nombre = JOptionPane.showInputDialog(null, "Escribe tu nombre:", "Ingresar Nombre", JOptionPane.QUESTION_MESSAGE);
         nombretxt.setText(nombre);
                             
@@ -22,6 +31,7 @@ public class GUI_Juego extends javax.swing.JFrame {
         matriz.changeSelection(row, column, false, false);
         //la casilla donde el jugador aparece no tiene nada que es en 0,0
         matriz.setValueAt(1, 0, 0);
+        
         int i, j,nf=10,nc=10;
          i=0;
          j=0;
@@ -38,6 +48,7 @@ public class GUI_Juego extends javax.swing.JFrame {
          matriz.setRowSelectionAllowed(false);
          matriz.setColumnSelectionAllowed(false);   
          matriz.setDefaultEditor(Object.class, null);
+         
     }
 
     /**
@@ -90,7 +101,7 @@ public class GUI_Juego extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 0));
-        jLabel2.setText("Cazatesoros");
+        jLabel2.setText("Treasure Finder");
 
         jScrollPane2.setBackground(new java.awt.Color(255, 204, 0));
         jScrollPane2.setForeground(new java.awt.Color(255, 204, 0));
@@ -98,7 +109,6 @@ public class GUI_Juego extends javax.swing.JFrame {
         matriz.setBackground(new java.awt.Color(255, 204, 0));
         matriz.setBorder(new javax.swing.border.MatteBorder(null));
         matriz.setFont(new java.awt.Font("Segoe UI", 0, 1)); // NOI18N
-        matriz.setForeground(new java.awt.Color(255, 204, 0));
         matriz.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null},
@@ -139,6 +149,18 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(matriz);
+        if (matriz.getColumnModel().getColumnCount() > 0) {
+            matriz.getColumnModel().getColumn(0).setResizable(false);
+            matriz.getColumnModel().getColumn(1).setResizable(false);
+            matriz.getColumnModel().getColumn(2).setResizable(false);
+            matriz.getColumnModel().getColumn(3).setResizable(false);
+            matriz.getColumnModel().getColumn(4).setResizable(false);
+            matriz.getColumnModel().getColumn(5).setResizable(false);
+            matriz.getColumnModel().getColumn(6).setResizable(false);
+            matriz.getColumnModel().getColumn(7).setResizable(false);
+            matriz.getColumnModel().getColumn(8).setResizable(false);
+            matriz.getColumnModel().getColumn(9).setResizable(false);
+        }
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(153, 102, 0));
@@ -278,10 +300,6 @@ public class GUI_Juego extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addGap(127, 127, 127))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(36, 36, 36)
@@ -298,7 +316,11 @@ public class GUI_Juego extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
                                             .addComponent(up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGap(102, 102, 102)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
@@ -307,9 +329,11 @@ public class GUI_Juego extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addComponent(jLabel3))
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
@@ -381,7 +405,8 @@ public class GUI_Juego extends javax.swing.JFrame {
         moverJugador(0, 1);
         
     }//GEN-LAST:event_rightMouseClicked
-
+    
+    
     public void llenar (int m[][],int nf, int nc,int i ,int j){
     
     if (i>=nf){
@@ -408,24 +433,29 @@ public class GUI_Juego extends javax.swing.JFrame {
 }
     int row = 0;
     int column = 0;
+    
     //funcion para mover el jugador
     private void moverJugador(int dRow, int dColumn) {
         int newRow = row + dRow;
         int newColumn = column + dColumn;
 
-        // Verificar que la nueva posición esté dentro de los límites del JTable
+        //esto verifica que la nueva posición esté dentro de los límites del JTable
         if (newRow >= 0 && newRow < matriz.getRowCount() && newColumn >= 0 && newColumn < matriz.getColumnCount()) {
+                       
+            //actualiza la posición del jugador
             row = newRow;
             column = newColumn;
              
             matriz.changeSelection(row, column, false, false);
 
-            // Obtener el valor de la celda a la que llegó el jugador
+            //obtener el valor de la celda a la que llegó el jugador
             int cellValue = (int) matriz.getValueAt(row, column);
+            
+            //las variables row y column indican la posición actual del jugador
             System.out.println("El jugador llegó a la posición (" + row + ", " + column + ") con valor: " + cellValue);
-        }
-        matriz.repaint();
+        }       
     }
+    
     
     /**
      * @param args the command line arguments
