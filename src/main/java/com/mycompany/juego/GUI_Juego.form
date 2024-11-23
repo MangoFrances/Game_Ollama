@@ -54,7 +54,7 @@
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="142" max="-2" attributes="0"/>
-                                      <Component id="jButton4" min="-2" pref="81" max="-2" attributes="0"/>
+                                      <Component id="left" min="-2" pref="81" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                                       <Component id="right" min="-2" pref="85" max="-2" attributes="0"/>
                                   </Group>
@@ -90,7 +90,7 @@
                       <Component id="up" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton4" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
+                          <Component id="left" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
                           <Component id="right" alignment="3" min="-2" pref="51" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="8" max="32767" attributes="0"/>
@@ -302,10 +302,6 @@
               </Group>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="tesoros" min="-2" pref="129" max="-2" attributes="0"/>
-                      </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -324,7 +320,10 @@
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="nombretxt" min="-2" pref="102" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="tesoros" alignment="1" min="-2" pref="129" max="-2" attributes="0"/>
+                              <Component id="nombretxt" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -429,25 +428,33 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Down"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="downMouseClicked"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton4">
+    <Component class="javax.swing.JButton" name="left">
       <Properties>
         <Property name="text" type="java.lang.String" value="Left"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="leftMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leftActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="up">
       <Properties>
         <Property name="text" type="java.lang.String" value="Up"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="upMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="right">
       <Properties>
         <Property name="text" type="java.lang.String" value="Right"/>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rightMouseClicked"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rightActionPerformed"/>
       </Events>
     </Component>

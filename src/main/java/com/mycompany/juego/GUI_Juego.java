@@ -17,6 +17,9 @@ public class GUI_Juego extends javax.swing.JFrame {
         initComponents();
         String nombre = JOptionPane.showInputDialog(null, "Escribe tu nombre:", "Ingresar Nombre", JOptionPane.QUESTION_MESSAGE);
         nombretxt.setText(nombre);
+                            
+        // Inicializar selección en la posición (0, 0)
+        matriz.changeSelection(row, column, false, false);
         //la casilla donde el jugador aparece no tiene nada que es en 0,0
         matriz.setValueAt(1, 0, 0);
         int i, j,nf=10,nc=10;
@@ -63,7 +66,7 @@ public class GUI_Juego extends javax.swing.JFrame {
         nombretxt = new javax.swing.JLabel();
         btnstats = new javax.swing.JButton();
         down = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        left = new javax.swing.JButton();
         up = new javax.swing.JButton();
         right = new javax.swing.JButton();
 
@@ -182,9 +185,6 @@ public class GUI_Juego extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(tesoros, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -199,7 +199,9 @@ public class GUI_Juego extends javax.swing.JFrame {
                         .addComponent(btnstats, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tesoros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nombretxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -223,17 +225,37 @@ public class GUI_Juego extends javax.swing.JFrame {
         );
 
         down.setText("Down");
+        down.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                downMouseClicked(evt);
+            }
+        });
 
-        jButton4.setText("Left");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        left.setText("Left");
+        left.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                leftMouseClicked(evt);
+            }
+        });
+        left.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                leftActionPerformed(evt);
             }
         });
 
         up.setText("Up");
+        up.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                upMouseClicked(evt);
+            }
+        });
 
         right.setText("Right");
+        right.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rightMouseClicked(evt);
+            }
+        });
         right.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rightActionPerformed(evt);
@@ -268,7 +290,7 @@ public class GUI_Juego extends javax.swing.JFrame {
                                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(142, 142, 142)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(116, 116, 116)
                                         .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
@@ -294,7 +316,7 @@ public class GUI_Juego extends javax.swing.JFrame {
                         .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                         .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -325,9 +347,9 @@ public class GUI_Juego extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_puntaje_actualActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void leftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_leftActionPerformed
 
     private void rightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightActionPerformed
         // TODO add your handling code here:
@@ -342,6 +364,23 @@ public class GUI_Juego extends javax.swing.JFrame {
       //Object valor = matriz.getValueAt(row, column);
       //System.out.println("Valor " +valor);
     }//GEN-LAST:event_matrizMouseClicked
+
+    private void upMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_upMouseClicked
+        moverJugador(-1, 0);
+    }//GEN-LAST:event_upMouseClicked
+
+    private void downMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downMouseClicked
+        moverJugador(1, 0);
+    }//GEN-LAST:event_downMouseClicked
+
+    private void leftMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leftMouseClicked
+        moverJugador(0, -1);
+    }//GEN-LAST:event_leftMouseClicked
+
+    private void rightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rightMouseClicked
+        moverJugador(0, 1);
+        
+    }//GEN-LAST:event_rightMouseClicked
 
     public void llenar (int m[][],int nf, int nc,int i ,int j){
     
@@ -367,6 +406,27 @@ public class GUI_Juego extends javax.swing.JFrame {
     //esto es para que en la posición 0, 0 de la matriz no haya nada (que es la posición inicial del jugador)
     matriz.setValueAt(1, 0, 0);
 }
+    int row = 0;
+    int column = 0;
+    //funcion para mover el jugador
+    private void moverJugador(int dRow, int dColumn) {
+        int newRow = row + dRow;
+        int newColumn = column + dColumn;
+
+        // Verificar que la nueva posición esté dentro de los límites del JTable
+        if (newRow >= 0 && newRow < matriz.getRowCount() && newColumn >= 0 && newColumn < matriz.getColumnCount()) {
+            row = newRow;
+            column = newColumn;
+             
+            matriz.changeSelection(row, column, false, false);
+
+            // Obtener el valor de la celda a la que llegó el jugador
+            int cellValue = (int) matriz.getValueAt(row, column);
+            System.out.println("El jugador llegó a la posición (" + row + ", " + column + ") con valor: " + cellValue);
+        }
+        matriz.repaint();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -407,7 +467,6 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JButton down;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -416,6 +475,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton left;
     private javax.swing.JTable matriz;
     private javax.swing.JLabel nombretxt;
     private javax.swing.JTextArea output_pista;
