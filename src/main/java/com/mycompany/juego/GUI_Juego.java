@@ -17,12 +17,9 @@ public class GUI_Juego extends javax.swing.JFrame {
  
     
     public GUI_Juego() {
-       
+        
         initComponents();
-
-        // Configurar colores de selección
-        matriz.setSelectionBackground(Color.YELLOW);  // Fondo de la celda seleccionada
-        matriz.setSelectionForeground(Color.BLACK);   // Color del texto de la celda seleccionada
+             
 
     // Inicializar selección en la posición (0, 0)
         matriz.changeSelection(row, column, false, false);
@@ -51,9 +48,12 @@ public class GUI_Juego extends javax.swing.JFrame {
          matriz.setRowSelectionAllowed(false);
          matriz.setColumnSelectionAllowed(false);   
          matriz.setDefaultEditor(Object.class, null);
-        
+                 
+         
     }
-
+     
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -429,7 +429,10 @@ public class GUI_Juego extends javax.swing.JFrame {
       int row = matriz.rowAtPoint(evt.getPoint());
       int column = matriz.columnAtPoint(evt.getPoint());
       System.out.println("Clic en la celda: (" + row + ", " + column + ")");
-      
+      JOptionPane.showMessageDialog(GUI_Juego.this,
+                        "Posición seleccionada: Fila = " + row + ", Columna = " + column,
+                        "Posición de la Casilla",
+                        JOptionPane.INFORMATION_MESSAGE);
       //esto es para verificar el contenido de las celdas, se quita en la version final  
       //Object valor = matriz.getValueAt(row, column);
       //System.out.println("Valor " +valor);
@@ -520,9 +523,9 @@ public class GUI_Juego extends javax.swing.JFrame {
              tesoros.setText(tes);
     }
     
-        }
-                 
+   }
     
+          
     
     /**
      * @param args the command line arguments
