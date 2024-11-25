@@ -20,7 +20,8 @@ public class GUI_Juego extends javax.swing.JFrame {
         
         initComponents();
              
-
+       rowtxt.setText("0");
+       columntxt.setText("0");
     // Inicializar selección en la posición (0, 0)
         matriz.changeSelection(row, column, false, false);
         String nombre = JOptionPane.showInputDialog(null, "Escribe tu nombre:", "Ingresar Nombre", JOptionPane.QUESTION_MESSAGE);
@@ -183,12 +184,14 @@ public class GUI_Juego extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Tesoros encontrados:");
 
+        tesoros.setEditable(false);
         tesoros.setBackground(new java.awt.Color(255, 255, 255));
         tesoros.setForeground(new java.awt.Color(0, 0, 0));
 
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Tu puntaje actual:");
 
+        puntaje_actual.setEditable(false);
         puntaje_actual.setBackground(new java.awt.Color(255, 255, 255));
         puntaje_actual.setForeground(new java.awt.Color(0, 0, 0));
         puntaje_actual.addActionListener(new java.awt.event.ActionListener() {
@@ -204,6 +207,7 @@ public class GUI_Juego extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Posición actual:");
 
+        rowtxt.setEditable(false);
         rowtxt.setBackground(new java.awt.Color(255, 255, 255));
         rowtxt.setForeground(new java.awt.Color(0, 0, 0));
         rowtxt.addActionListener(new java.awt.event.ActionListener() {
@@ -212,6 +216,7 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
         });
 
+        columntxt.setEditable(false);
         columntxt.setBackground(new java.awt.Color(255, 255, 255));
         columntxt.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -511,7 +516,7 @@ public class GUI_Juego extends javax.swing.JFrame {
             String rowtemp; 
             String columntemp;
             rowtemp = Integer.toString(row);
-            columntemp = Integer.toString(column);
+            columntemp = Integer.toString(column); 
             rowtxt.setText(rowtemp);
             columntxt.setText(columntemp);
             String tes, strpunt;
