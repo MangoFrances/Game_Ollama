@@ -487,10 +487,9 @@ public class GUI_Juego extends javax.swing.JFrame {
 }
     int row = 0;
     int column = 0;
-    
-    //funcion para mover el jugador
     private int ct = 0;
-    
+    private int punt = 0;
+    //funcion para mover el jugador y calular puntajes
     private void moverJugador(int dRow, int dColumn) {
         int newRow = row + dRow;
         int newColumn = column + dColumn;
@@ -515,15 +514,20 @@ public class GUI_Juego extends javax.swing.JFrame {
             columntemp = Integer.toString(column);
             rowtxt.setText(rowtemp);
             columntxt.setText(columntemp);
-            int punt = 0;
-            String tes;
-         if(cellValue == 1){
+            String tes, strpunt;
+         if(cellValue == 2){
                 ct = ct + 1;
                 tes = String.valueOf(ct);
                 tesoros.setText(tes);
-                
-            }
-                         
+                punt = punt + 500;
+                strpunt = String.valueOf(punt);
+                puntaje_actual.setText(strpunt);
+          }
+          if(cellValue == 3){
+              punt = punt - 200;
+              strpunt = String.valueOf(punt);
+              puntaje_actual.setText(strpunt);
+          }               
     }
     
    }
