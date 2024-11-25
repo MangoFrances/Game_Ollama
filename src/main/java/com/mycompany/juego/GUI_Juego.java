@@ -489,6 +489,8 @@ public class GUI_Juego extends javax.swing.JFrame {
     int column = 0;
     
     //funcion para mover el jugador
+    private int ct = 0;
+    
     private void moverJugador(int dRow, int dColumn) {
         int newRow = row + dRow;
         int newColumn = column + dColumn;
@@ -513,14 +515,15 @@ public class GUI_Juego extends javax.swing.JFrame {
             columntemp = Integer.toString(column);
             rowtxt.setText(rowtemp);
             columntxt.setText(columntemp);
-                  int ct=0;
-        
-         if(cellValue==2){
-                ct=ct+1;
+            int punt = 0;
+            String tes;
+         if(cellValue == 1){
+                ct = ct + 1;
+                tes = String.valueOf(ct);
+                tesoros.setText(tes);
+                
             }
-             String tes;
-             tes=String.valueOf(ct);
-             tesoros.setText(tes);
+                         
     }
     
    }
