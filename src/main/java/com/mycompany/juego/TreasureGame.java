@@ -113,7 +113,7 @@ class TreasureGame {
 
     // Muestra el mapa del juego
     public void displayMap() {
-        System.out.println("Mapa del juego:");
+        //System.out.println("Mapa del juego:");
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (i == playerX && j == playerY) {
@@ -126,8 +126,8 @@ class TreasureGame {
             }
             System.out.println();
         }
-        System.out.println("Tesoros encontrados: " + treasuresFound + "/" + totalTreasures);
-        System.out.println("Puntaje: " + score);
+        //System.out.println("Tesoros encontrados: " + treasuresFound + "/" + totalTreasures);
+        //System.out.println("Puntaje: " + score);
     }
 }
 

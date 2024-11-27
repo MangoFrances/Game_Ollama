@@ -6,7 +6,17 @@ package com.mycompany.juego;
 
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import org.json.JSONObject;
 
 
 /**
@@ -15,6 +25,7 @@ import javax.swing.JOptionPane;
  */
 public class GUI_Juego extends javax.swing.JFrame {
  
+    String nombremodelo = "gemma2:2b";
     
     public GUI_Juego() {
         
@@ -53,7 +64,20 @@ public class GUI_Juego extends javax.swing.JFrame {
          
     }
      
-    
+    private void prompt() {
+        String texto = prompt.getText().trim(); // Toca usar una variable para limpiar espacios sera erroneo si lo hacemos directo en el IF
+        if (!texto.isEmpty()) {
+            output.append("Usuario: " + texto + "\n");
+
+            String entrada = texto;
+            String milagro = (ollama(nombremodelo, entrada) + "\n");
+
+            output.append("Respuesta: " + milagro + "\n");
+            prompt.setText("");
+
+            
+        }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,10 +88,10 @@ public class GUI_Juego extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton2 = new javax.swing.JButton();
+        btn_prompt = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        output_pista = new javax.swing.JTextArea();
+        output = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         matriz = new javax.swing.JTable();
@@ -88,12 +112,20 @@ public class GUI_Juego extends javax.swing.JFrame {
         left = new javax.swing.JButton();
         up = new javax.swing.JButton();
         right = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        prompt = new javax.swing.JTextPane();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(747, 458));
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pista.png"))); // NOI18N
-        jButton2.setText("Pedir pista");
+        btn_prompt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pista.png"))); // NOI18N
+        btn_prompt.setText("Pedir pista");
+        btn_prompt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_promptMouseClicked(evt);
+            }
+        });
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/close.png"))); // NOI18N
         jButton1.setText("Salir");
@@ -103,12 +135,12 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
         });
 
-        output_pista.setColumns(20);
-        output_pista.setRows(5);
-        jScrollPane1.setViewportView(output_pista);
+        output.setColumns(20);
+        output.setRows(5);
+        jScrollPane1.setViewportView(output);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel2.setForeground(new java.awt.Color(204, 204, 0));
         jLabel2.setText("Treasure Finder");
 
         jScrollPane2.setBackground(new java.awt.Color(255, 204, 0));
@@ -202,6 +234,7 @@ public class GUI_Juego extends javax.swing.JFrame {
 
         nombretxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         nombretxt.setForeground(new java.awt.Color(153, 0, 0));
+        nombretxt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         nombretxt.setText("-");
 
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -233,20 +266,19 @@ public class GUI_Juego extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(tesoros, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -335,6 +367,11 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane3.setViewportView(prompt);
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("Escribe aqui:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -343,10 +380,16 @@ public class GUI_Juego extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(9, 9, 9)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1))
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -358,20 +401,20 @@ public class GUI_Juego extends javax.swing.JFrame {
                                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(142, 142, 142)
-                                        .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(116, 116, 116)
-                                        .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(145, 145, 145)
+                                        .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(110, 110, 110)
+                                        .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(243, 243, 243)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-                                            .addComponent(up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
+                                            .addComponent(up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
-                                .addGap(145, 145, 145)))
+                                .addGap(127, 127, 127)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
@@ -387,18 +430,23 @@ public class GUI_Juego extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
+                        .addGap(18, 18, 18)
+                        .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)
-                        .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btn_prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -464,6 +512,10 @@ public class GUI_Juego extends javax.swing.JFrame {
     private void rowtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rowtxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rowtxtActionPerformed
+
+    private void btn_promptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_promptMouseClicked
+        prompt();
+    }//GEN-LAST:event_btn_promptMouseClicked
     
     
     public void llenar (int m[][],int nf, int nc,int i ,int j){
@@ -575,10 +627,10 @@ public class GUI_Juego extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_prompt;
     private javax.swing.JTextField columntxt;
     private javax.swing.JButton down;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -587,17 +639,100 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton left;
     private javax.swing.JTable matriz;
     private javax.swing.JLabel nombretxt;
-    private javax.swing.JTextArea output_pista;
+    private javax.swing.JTextArea output;
+    private javax.swing.JTextPane prompt;
     private javax.swing.JTextField puntaje_actual;
     private javax.swing.JButton right;
     private javax.swing.JTextField rowtxt;
     private javax.swing.JTextField tesoros;
     private javax.swing.JButton up;
     // End of variables declaration//GEN-END:variables
+
+public static String ollama(String nombremodelo, String promptText) {
+        double inicio = System.currentTimeMillis(); // Marca de tiempo de inicio
+        try {
+            URL url = new URL("http://localhost:11434/api/generate");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+
+            // Configura tiempos de espera para conexión y lectura
+            conn.setConnectTimeout(40000); // Tiempo de espera para conectar (5 segundos)
+            conn.setReadTimeout(40000); // Tiempo de espera para leer datos (5 segundos)
+
+            String jsonInputString = String.format(
+                    "{\"model\": \"%s\", \"prompt\": \"Por favor, responde siempre en español. %s\", \"stream\": false}",
+                    nombremodelo, promptText);
+
+            try ( OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            int code = conn.getResponseCode();
+            String errorMessage = errorHandler(code);
+            if (errorMessage != null) {
+                return errorMessage;
+            } else {
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
+                }
+                in.close();
+
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                String responseText = jsonResponse.getString("response");
+                // Configuramos `setConnectTimeout` y `setReadTimeout` para limitar automáticamente el tiempo de espera 
+                // en la conexión y lectura, lanzando `SocketTimeoutException` si se excede el límite. Además, medimos el 
+                // tiempo total de ejecución con `System.currentTimeMillis()` para monitorear el rendimiento global de la operación.
+                // Devolver la respuesta
+                return "Exitoso: " + responseText;
+            }
+
+        } catch (SocketTimeoutException e) {
+            return "Error: Tiempo de espera de conexión o lectura excedido";
+        } catch (MalformedURLException e) {
+            return "La URL es inválida: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error de conexión: " + e.getMessage();
+        }
+    }
+
+private static String errorHandler(int code) {
+        switch (code) {
+            case 400:
+                return "Error 400: Solicitud incorrecta. No terminar o empezar Prompt con tecla (Enter o Espacio).";
+            case 401:
+                return "Error 401: No autorizado. Verifica tus credenciales de autenticación.";
+            case 403:
+                return "Error 403: Prohibido. No tienes permiso para acceder a este recurso.";
+            case 404:
+                return "Error 404: El recurso solicitado no fue encontrado. Verifica el endpoint y el servidor.";
+            case 500:
+                return "Error 500: Error interno del servidor. Intenta nuevamente más tarde.";
+            case 503:
+                return "Error 503: Servicio no disponible. El servidor podría estar en mantenimiento.";
+            default:
+                return null;
+        }
+    }
+
+
+//llave que cierra todo
 }
+
+

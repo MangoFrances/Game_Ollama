@@ -18,7 +18,7 @@ public class Juego {
         game.displayMap();
 
         while (true) {
-            System.out.println("¿Hacia dónde quieres moverte? (UP, DOWN, LEFT, RIGHT):");
+            //System.out.println("¿Hacia dónde quieres moverte? (UP, DOWN, LEFT, RIGHT):");
             String direction = scanner.nextLine();
             game.movePlayer(direction);
         }
