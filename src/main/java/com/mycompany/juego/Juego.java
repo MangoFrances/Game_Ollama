@@ -9,10 +9,7 @@ public class Juego {
         
         GUI2 frame = new GUI2();
         frame.setVisible(true);
-       
-        
-        System.out.println("Hello World!");
-        
+      
         Scanner scanner = new Scanner(System.in);
         TreasureGame game = new TreasureGame(5, 5); // Mapa de 5x5
         game.displayMap();
@@ -21,6 +18,7 @@ public class Juego {
             //System.out.println("¿Hacia dónde quieres moverte? (UP, DOWN, LEFT, RIGHT):");
             String direction = scanner.nextLine();
             game.movePlayer(direction);
+            
         }
     }
 }

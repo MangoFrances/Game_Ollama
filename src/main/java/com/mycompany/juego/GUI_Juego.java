@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.juego;
-
+//cambio en la el manejo de tiempo de espera
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -517,7 +517,6 @@ public class GUI_Juego extends javax.swing.JFrame {
         prompt();
     }//GEN-LAST:event_btn_promptMouseClicked
     
-    
     public void llenar (int m[][],int nf, int nc,int i ,int j){
     
     if (i>=nf){
@@ -666,9 +665,7 @@ public static String ollama(String nombremodelo, String promptText) {
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
 
-            // Configura tiempos de espera para conexión y lectura
-            conn.setConnectTimeout(40000); // Tiempo de espera para conectar (5 segundos)
-            conn.setReadTimeout(40000); // Tiempo de espera para leer datos (5 segundos)
+           
 
             String jsonInputString = String.format(
                     "{\"model\": \"%s\", \"prompt\": \"Por favor, responde siempre en español. %s\", \"stream\": false}",
@@ -696,10 +693,7 @@ public static String ollama(String nombremodelo, String promptText) {
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 String responseText = jsonResponse.getString("response");
-                // Configuramos `setConnectTimeout` y `setReadTimeout` para limitar automáticamente el tiempo de espera 
-                // en la conexión y lectura, lanzando `SocketTimeoutException` si se excede el límite. Además, medimos el 
-                // tiempo total de ejecución con `System.currentTimeMillis()` para monitorear el rendimiento global de la operación.
-                // Devolver la respuesta
+               
                 return "Exitoso: " + responseText;
             }
 
