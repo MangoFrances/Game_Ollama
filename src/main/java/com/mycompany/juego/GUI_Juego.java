@@ -18,52 +18,50 @@ import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
 import org.json.JSONObject;
 
-
 /**
  *
  * @author migue
  */
 public class GUI_Juego extends javax.swing.JFrame {
- 
+
     String nombremodelo = "gemma2:2b";
-    
+
     public GUI_Juego() {
-        
+
         initComponents();
-             
-       rowtxt.setText("0");
-       columntxt.setText("0");
-    // Inicializar selección en la posición (0, 0)
+
+        rowtxt.setText("0");
+        columntxt.setText("0");
+        // Inicializar selección en la posición (0, 0)
         matriz.changeSelection(row, column, false, false);
         String nombre = JOptionPane.showInputDialog(null, "Escribe tu nombre:", "Ingresar Nombre", JOptionPane.QUESTION_MESSAGE);
         nombretxt.setText(nombre);
-                            
+
         // Inicializar selección en la posición (0, 0)
         matriz.changeSelection(row, column, false, false);
         //la casilla donde el jugador aparece no tiene nada que es en 0,0
         matriz.setValueAt(1, 0, 0);
-        
-        int i, j,nf=10,nc=10;
-         i=0;
-         j=0;
-         
-         int [][]v= new int [nf][nc];
-         llenar (v,nf,nc,i,j);
-         for (i = 0; i < 10; i++) {
-            for ( j = 1; j < 10; j++) {
-               // System.out.print(v[i][j]+" ");
+
+        int i, j, nf = 10, nc = 10;
+        i = 0;
+        j = 0;
+
+        int[][] v = new int[nf][nc];
+        llenar(v, nf, nc, i, j);
+        for (i = 0; i < 10; i++) {
+            for (j = 1; j < 10; j++) {
+                // System.out.print(v[i][j]+" ");
             }
-             System.out.println("");
-          }
-                
-         matriz.setCellSelectionEnabled(false);
-         matriz.setRowSelectionAllowed(false);
-         matriz.setColumnSelectionAllowed(false);   
-         matriz.setDefaultEditor(Object.class, null);
-                 
-         
+            System.out.println("");
+        }
+
+        matriz.setCellSelectionEnabled(false);
+        matriz.setRowSelectionAllowed(false);
+        matriz.setColumnSelectionAllowed(false);
+        matriz.setDefaultEditor(Object.class, null);
+
     }
-     
+
     private void prompt() {
         String texto = prompt.getText().trim(); // Toca usar una variable para limpiar espacios sera erroneo si lo hacemos directo en el IF
         if (!texto.isEmpty()) {
@@ -75,10 +73,9 @@ public class GUI_Juego extends javax.swing.JFrame {
             output.append("Respuesta: " + milagro + "\n");
             prompt.setText("");
 
-            
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,6 +112,8 @@ public class GUI_Juego extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         prompt = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        matriz2 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(747, 458));
@@ -146,9 +145,9 @@ public class GUI_Juego extends javax.swing.JFrame {
         jScrollPane2.setBackground(new java.awt.Color(255, 204, 0));
         jScrollPane2.setForeground(new java.awt.Color(255, 204, 0));
 
-        matriz.setBackground(new java.awt.Color(255, 204, 0));
+        matriz.setBackground(new java.awt.Color(51, 51, 255));
         matriz.setBorder(new javax.swing.border.MatteBorder(null));
-        matriz.setFont(new java.awt.Font("Segoe UI", 0, 1)); // NOI18N
+        matriz.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         matriz.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null},
@@ -372,6 +371,65 @@ public class GUI_Juego extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Escribe aqui:");
 
+        jScrollPane5.setBackground(new java.awt.Color(255, 204, 0));
+        jScrollPane5.setForeground(new java.awt.Color(255, 204, 0));
+
+        matriz2.setBackground(new java.awt.Color(255, 255, 51));
+        matriz2.setBorder(new javax.swing.border.MatteBorder(null));
+        matriz2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        matriz2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "", "", "", "", "", "", "", "", "", ""
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        matriz2.setAutoscrolls(false);
+        matriz2.setUpdateSelectionOnSort(false);
+        matriz2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                matriz2MouseClicked(evt);
+            }
+        });
+        jScrollPane5.setViewportView(matriz2);
+        if (matriz2.getColumnModel().getColumnCount() > 0) {
+            matriz2.getColumnModel().getColumn(0).setResizable(false);
+            matriz2.getColumnModel().getColumn(1).setResizable(false);
+            matriz2.getColumnModel().getColumn(2).setResizable(false);
+            matriz2.getColumnModel().getColumn(3).setResizable(false);
+            matriz2.getColumnModel().getColumn(4).setResizable(false);
+            matriz2.getColumnModel().getColumn(5).setResizable(false);
+            matriz2.getColumnModel().getColumn(6).setResizable(false);
+            matriz2.getColumnModel().getColumn(7).setResizable(false);
+            matriz2.getColumnModel().getColumn(8).setResizable(false);
+            matriz2.getColumnModel().getColumn(9).setResizable(false);
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -396,11 +454,6 @@ public class GUI_Juego extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addGap(145, 145, 145)
                                         .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(110, 110, 110)
@@ -409,12 +462,21 @@ public class GUI_Juego extends javax.swing.JFrame {
                                         .addGap(243, 243, 243)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE))
+                                            .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(36, 36, 36)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
-                                .addGap(127, 127, 127)))
+                                .addGap(127, 127, 127))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
@@ -429,8 +491,10 @@ public class GUI_Juego extends javax.swing.JFrame {
                                 .addComponent(jLabel3))
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -463,7 +527,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         this.dispose();
         JOptionPane.showMessageDialog(null, "Gracias por jugar!", "Salida", JOptionPane.CLOSED_OPTION);
-        
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void puntaje_actualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_puntaje_actualActionPerformed
@@ -479,17 +543,17 @@ public class GUI_Juego extends javax.swing.JFrame {
     }//GEN-LAST:event_rightActionPerformed
 
     private void matrizMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_matrizMouseClicked
-      int row = matriz.rowAtPoint(evt.getPoint());
-      int column = matriz.columnAtPoint(evt.getPoint());
-      System.out.println("Clic en la celda: (" + row + ", " + column + ")");
-      JOptionPane.showMessageDialog(GUI_Juego.this,
-                        "Posición seleccionada: Fila = " + row + ", Columna = " + column,
-                        "Posición de la Casilla",
-                        JOptionPane.INFORMATION_MESSAGE);
-      //esto es para verificar el contenido de las celdas, se quita en la version final  
-      //Object valor = matriz.getValueAt(row, column);
-      //System.out.println("Valor " +valor);
-      
+        int row = matriz.rowAtPoint(evt.getPoint());
+        int column = matriz.columnAtPoint(evt.getPoint());
+        System.out.println("Clic en la celda: (" + row + ", " + column + ")");
+        JOptionPane.showMessageDialog(GUI_Juego.this,
+                "Posición seleccionada: Fila = " + row + ", Columna = " + column,
+                "Posición de la Casilla",
+                JOptionPane.INFORMATION_MESSAGE);
+        //esto es para verificar el contenido de las celdas, se quita en la version final  
+        //Object valor = matriz.getValueAt(row, column);
+        //System.out.println("Valor " +valor);
+
     }//GEN-LAST:event_matrizMouseClicked
 
     private void upMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_upMouseClicked
@@ -506,7 +570,7 @@ public class GUI_Juego extends javax.swing.JFrame {
 
     private void rightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rightMouseClicked
         moverJugador(0, 1);
-        
+
     }//GEN-LAST:event_rightMouseClicked
 
     private void rowtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rowtxtActionPerformed
@@ -516,83 +580,90 @@ public class GUI_Juego extends javax.swing.JFrame {
     private void btn_promptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_promptMouseClicked
         prompt();
     }//GEN-LAST:event_btn_promptMouseClicked
-    
-    public void llenar (int m[][],int nf, int nc,int i ,int j){
-    
-    if (i>=nf){
-        return;
+
+    private void matriz2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_matriz2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matriz2MouseClicked
+
+    public void llenar(int m[][], int nf, int nc, int i, int j) {
+
+        if (i >= nf) {
+            return;
+        }
+        if (Math.random() * 1 <= 0.50) {
+            m[i][j] = 1;
+            matriz.setValueAt(1, i, j);
+        } else if (Math.random() * 1 > 0.50 && Math.random() * 1 <= 0.75) {
+            m[i][j] = 2;
+            matriz.setValueAt(2, i, j);
+        } else {
+            m[i][j] = 3;
+            matriz.setValueAt(3, i, j);
+            //si m=1 esta vacio si m=2 es tesoro y si m=3 es trampa
+        }
+        if (j < nc - 1) {
+            llenar(m, nf, nc, i, j + 1);
+        } else {
+            llenar(m, nf, nc, i + 1, 0);
+        }
+        //esto es para que en la posición 0, 0 de la matriz no haya nada (que es la posición inicial del jugador)
+        matriz.setValueAt(1, 0, 0);
     }
-    if (Math.random()*1<=0.50){
-        m[i][j]= 1;
-        matriz.setValueAt(1, i, j);
-    }else if (Math.random()*1>0.50&& Math.random()*1<=0.75){
-        m[i][j]=2;
-        matriz.setValueAt(2, i, j);
-    }else {
-        m[i][j]=3;
-        matriz.setValueAt(3, i, j);
-        //si m=1 esta vacio si m=2 es tesoro y si m=3 es trampa
-    }
-    if (j<nc-1){
-        llenar (m,nf,nc,i,j+1);
-    }else {
-        llenar (m,nf,nc,i+1,0);
-    }   
-    //esto es para que en la posición 0, 0 de la matriz no haya nada (que es la posición inicial del jugador)
-    matriz.setValueAt(1, 0, 0);
-}
     int row = 0;
     int column = 0;
     private int ct = 0;
     private int punt = 0;
+
     //funcion para mover el jugador y calular puntajes
     private void moverJugador(int dRow, int dColumn) {
         int newRow = row + dRow;
         int newColumn = column + dColumn;
-       
+
         //esto verifica que la nueva posición esté dentro de los límites del JTable
         if (newRow >= 0 && newRow < matriz.getRowCount() && newColumn >= 0 && newColumn < matriz.getColumnCount()) {
-                       
+
             //actualiza la posición del jugador
             row = newRow;
             column = newColumn;
-             
+
             matriz.changeSelection(row, column, false, false);
 
             //obtener el valor de la celda a la que llegó el jugador
             int cellValue = (int) matriz.getValueAt(row, column);
-            
+
             //las variables row y column indican la posición actual del jugador
             System.out.println("El jugador llegó a la posición (" + row + ", " + column + ") con valor: " + cellValue);
-            String rowtemp; 
+            String rowtemp;
             String columntemp;
             rowtemp = Integer.toString(row);
-            columntemp = Integer.toString(column); 
+            columntemp = Integer.toString(column);
             rowtxt.setText(rowtemp);
             columntxt.setText(columntemp);
             String tes, strpunt;
-         if(cellValue == 2){
-                ct = ct + 1;
-                tes = String.valueOf(ct);
-                tesoros.setText(tes);
-                punt = punt + 500;
-                strpunt = String.valueOf(punt);
-                puntaje_actual.setText(strpunt);
-          }
-          if(cellValue == 3){
-              punt = punt - 200;
-              strpunt = String.valueOf(punt);
-              puntaje_actual.setText(strpunt);
-          }               
-    }
-    
-   }
-    
-          
-    
-    /**
-     * @param args the command line arguments
-     */
+            if (cellValue == 1) {
+              matriz2.setValueAt(1, row, column);
+            }
+                if (cellValue == 2) {
+                    ct = ct + 1;
+                    tes = String.valueOf(ct);
+                    tesoros.setText(tes);
+                    punt = punt + 500;
+                    strpunt = String.valueOf(punt);
+                    puntaje_actual.setText(strpunt);
+                    matriz2.setValueAt(2, row, column);
+                }
+                if (cellValue == 3) {
+                    punt = punt - 200;
+                    strpunt = String.valueOf(punt);
+                    puntaje_actual.setText(strpunt);
+                    matriz2.setValueAt(3, row, column);
+                }
+            }
+
+        }
+        /**
+         * @param args the command line arguments
+         */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -643,8 +714,10 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton left;
     private javax.swing.JTable matriz;
+    private javax.swing.JTable matriz2;
     private javax.swing.JLabel nombretxt;
     private javax.swing.JTextArea output;
     private javax.swing.JTextPane prompt;
@@ -655,7 +728,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JButton up;
     // End of variables declaration//GEN-END:variables
 
-public static String ollama(String nombremodelo, String promptText) {
+    public static String ollama(String nombremodelo, String promptText) {
         double inicio = System.currentTimeMillis(); // Marca de tiempo de inicio
         try {
             URL url = new URL("http://localhost:11434/api/generate");
@@ -665,13 +738,11 @@ public static String ollama(String nombremodelo, String promptText) {
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
 
-           
-
             String jsonInputString = String.format(
                     "{\"model\": \"%s\", \"prompt\": \"Por favor, responde siempre en español. %s\", \"stream\": false}",
                     nombremodelo, promptText);
 
-            try ( OutputStream os = conn.getOutputStream()) {
+            try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
@@ -693,7 +764,7 @@ public static String ollama(String nombremodelo, String promptText) {
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 String responseText = jsonResponse.getString("response");
-               
+
                 return "Exitoso: " + responseText;
             }
 
@@ -706,7 +777,7 @@ public static String ollama(String nombremodelo, String promptText) {
         }
     }
 
-private static String errorHandler(int code) {
+    private static String errorHandler(int code) {
         switch (code) {
             case 400:
                 return "Error 400: Solicitud incorrecta. No terminar o empezar Prompt con tecla (Enter o Espacio).";
@@ -725,8 +796,5 @@ private static String errorHandler(int code) {
         }
     }
 
-
 //llave que cierra todo
 }
-
-
