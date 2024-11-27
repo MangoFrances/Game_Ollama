@@ -22,4 +22,4 @@ public class Juego {
         }
     }
 }
-//palabras de ladino
+//palabras de ladino con otras palabras de ladino

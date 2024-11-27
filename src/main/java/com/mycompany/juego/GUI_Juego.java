@@ -15,7 +15,10 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import org.json.JSONObject;
 
 /**
@@ -25,55 +28,39 @@ import org.json.JSONObject;
 public class GUI_Juego extends javax.swing.JFrame {
 
     String nombremodelo = "gemma2:2b";
+    private int[][] tablero = new int[10][10]; // Matriz lógica para almacenar tesoros, trampas y casillas vacías
+    private int row = 0; // Posición actual del jugador (fila)
+    private int column = 0; // Posición actual del jugador (columna)
+    private int ct = 0; // Contador de tesoros encontrados
+    private int punt = 0; // Puntuación actual
+// Puntuación actual
 
     public GUI_Juego() {
-
         initComponents();
+        // Configurar la tabla matriz2
+        matriz2.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[10][10], // 10x10 tablero
+                new String[]{"", "", "", "", "", "", "", "", "", ""} // Columnas vacías
+        ) {
+            Class[] types = new Class[]{
+                String.class, String.class, String.class, String.class, String.class,
+                String.class, String.class, String.class, String.class, String.class
+            };
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false, false, false
+            };
 
-        rowtxt.setText("0");
-        columntxt.setText("0");
-        // Inicializar selección en la posición (0, 0)
-        matriz.changeSelection(row, column, false, false);
-        String nombre = JOptionPane.showInputDialog(null, "Escribe tu nombre:", "Ingresar Nombre", JOptionPane.QUESTION_MESSAGE);
-        nombretxt.setText(nombre);
-
-        // Inicializar selección en la posición (0, 0)
-        matriz.changeSelection(row, column, false, false);
-        //la casilla donde el jugador aparece no tiene nada que es en 0,0
-        matriz.setValueAt(1, 0, 0);
-
-        int i, j, nf = 10, nc = 10;
-        i = 0;
-        j = 0;
-
-        int[][] v = new int[nf][nc];
-        llenar(v, nf, nc, i, j);
-        for (i = 0; i < 10; i++) {
-            for (j = 1; j < 10; j++) {
-                // System.out.print(v[i][j]+" ");
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
             }
-            System.out.println("");
-        }
 
-        matriz.setCellSelectionEnabled(false);
-        matriz.setRowSelectionAllowed(false);
-        matriz.setColumnSelectionAllowed(false);
-        matriz.setDefaultEditor(Object.class, null);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
 
-    }
-
-    private void prompt() {
-        String texto = prompt.getText().trim(); // Toca usar una variable para limpiar espacios sera erroneo si lo hacemos directo en el IF
-        if (!texto.isEmpty()) {
-            output.append("Usuario: " + texto + "\n");
-
-            String entrada = texto;
-            String milagro = (ollama(nombremodelo, entrada) + "\n");
-
-            output.append("Respuesta: " + milagro + "\n");
-            prompt.setText("");
-
-        }
+        // Llenar la tabla lógica y configurar el tablero
+        llenar(tablero, 10, 10);
     }
 
     /**
@@ -86,7 +73,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private void initComponents() {
 
         btn_prompt = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         output = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
@@ -109,9 +96,6 @@ public class GUI_Juego extends javax.swing.JFrame {
         left = new javax.swing.JButton();
         up = new javax.swing.JButton();
         right = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        prompt = new javax.swing.JTextPane();
-        jLabel9 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         matriz2 = new javax.swing.JTable();
 
@@ -126,11 +110,11 @@ public class GUI_Juego extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/close.png"))); // NOI18N
-        jButton1.setText("Salir");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/close.png"))); // NOI18N
+        exit.setText("Salir");
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                exitMouseClicked(evt);
             }
         });
 
@@ -234,7 +218,7 @@ public class GUI_Juego extends javax.swing.JFrame {
         nombretxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         nombretxt.setForeground(new java.awt.Color(153, 0, 0));
         nombretxt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        nombretxt.setText("-");
+        nombretxt.setText("BEBE");
 
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Posición actual:");
@@ -275,9 +259,7 @@ public class GUI_Juego extends javax.swing.JFrame {
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(27, 27, 27)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -301,15 +283,19 @@ public class GUI_Juego extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(columntxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(nombretxt)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombretxt)
                 .addGap(18, 18, 18)
+                .addComponent(nombretxt)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(tesoros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -365,11 +351,6 @@ public class GUI_Juego extends javax.swing.JFrame {
                 rightActionPerformed(evt);
             }
         });
-
-        jScrollPane3.setViewportView(prompt);
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText("Escribe aqui:");
 
         jScrollPane5.setBackground(new java.awt.Color(255, 204, 0));
         jScrollPane5.setForeground(new java.awt.Color(255, 204, 0));
@@ -437,38 +418,20 @@ public class GUI_Juego extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addContainerGap()
                         .addComponent(btn_prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(9, 9, 9)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1))
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1)
+                        .addGap(66, 66, 66)
+                        .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(36, 36, 36)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(145, 145, 145)
-                                        .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(110, 110, 110)
-                                        .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(243, 243, 243)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(down, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 376, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
@@ -476,59 +439,67 @@ public class GUI_Juego extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(131, 131, 131)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(54, 54, 54)
-                                .addComponent(jLabel3))
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btn_prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9)))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(54, 54, 54)
+                                        .addComponent(jLabel3))
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(up, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(47, 47, 47)
+                                .addComponent(down, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(right, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(46, 46, 46)))
+                        .addGap(17, 17, 17))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)))
-                .addContainerGap())
+                        .addGap(81, 81, 81)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
         this.dispose();
         JOptionPane.showMessageDialog(null, "Gracias por jugar!", "Salida", JOptionPane.CLOSED_OPTION);
 
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_exitMouseClicked
 
     private void puntaje_actualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_puntaje_actualActionPerformed
         // TODO add your handling code here:
@@ -578,92 +549,102 @@ public class GUI_Juego extends javax.swing.JFrame {
     }//GEN-LAST:event_rowtxtActionPerformed
 
     private void btn_promptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_promptMouseClicked
-        prompt();
+
+        // Construir el mensaje para solicitar pistas
+    String promptText = "¿Dónde están los tesoros? Por favor, indícame las posiciones.";
+
+    // Llamar a la API con el tablero
+    String respuesta = ollama(nombremodelo, promptText, tablero);
+
+    // Mostrar la respuesta en el cuadro de texto de salida
+    output.append("API: " + respuesta + "\n");
+
+    // Llamar al método para procesar las pistas y actualizarlas en el tablero
+    procesarPistas(respuesta);
     }//GEN-LAST:event_btn_promptMouseClicked
 
     private void matriz2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_matriz2MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_matriz2MouseClicked
 
-    public void llenar(int m[][], int nf, int nc, int i, int j) {
+    public void llenar(int[][] m, int nf, int nc) {
+        DefaultTableModel model = (DefaultTableModel) matriz2.getModel();
 
-        if (i >= nf) {
-            return;
+        for (int i = 0; i < nf; i++) {
+            for (int j = 0; j < nc; j++) {
+                double random = Math.random();
+                if (random <= 0.50) {
+                    m[i][j] = 1; // Casilla vacía
+                } else if (random > 0.50 && random <= 0.75) {
+                    m[i][j] = 2; // Tesoro
+                } else {
+                    m[i][j] = 3; // Trampa
+                }
+                // Inicialmente, dejamos las celdas vacías visualmente
+                model.setValueAt(" ", i, j);
+            }
         }
-        if (Math.random() * 1 <= 0.50) {
-            m[i][j] = 1;
-            matriz.setValueAt(1, i, j);
-        } else if (Math.random() * 1 > 0.50 && Math.random() * 1 <= 0.75) {
-            m[i][j] = 2;
-            matriz.setValueAt(2, i, j);
-        } else {
-            m[i][j] = 3;
-            matriz.setValueAt(3, i, j);
-            //si m=1 esta vacio si m=2 es tesoro y si m=3 es trampa
-        }
-        if (j < nc - 1) {
-            llenar(m, nf, nc, i, j + 1);
-        } else {
-            llenar(m, nf, nc, i + 1, 0);
-        }
-        //esto es para que en la posición 0, 0 de la matriz no haya nada (que es la posición inicial del jugador)
-        matriz.setValueAt(1, 0, 0);
+
+        // Colocar al jugador en la posición inicial
+        m[0][0] = 1; // Casilla inicial vacía
+        model.setValueAt("P", 0, 0); // Mostrar al jugador en la posición inicial
+        matriz2.repaint(); // Refrescar la tabla
     }
-    int row = 0;
-    int column = 0;
-    private int ct = 0;
-    private int punt = 0;
 
     //funcion para mover el jugador y calular puntajes
     private void moverJugador(int dRow, int dColumn) {
+        DefaultTableModel model = (DefaultTableModel) matriz2.getModel();
+
         int newRow = row + dRow;
         int newColumn = column + dColumn;
 
-        //esto verifica que la nueva posición esté dentro de los límites del JTable
-        if (newRow >= 0 && newRow < matriz.getRowCount() && newColumn >= 0 && newColumn < matriz.getColumnCount()) {
+        // Verificar límites
+        if (newRow >= 0 && newRow < matriz2.getRowCount() && newColumn >= 0 && newColumn < matriz2.getColumnCount()) {
+            // Marcar la posición anterior como visitada si no era un tesoro o trampa
+            int previousValue = tablero[row][column];
+            if (previousValue == 1) {
+                model.setValueAt(".", row, column); // Marcar como visitada
+            }
 
-            //actualiza la posición del jugador
+            // Actualizar posición del jugador
             row = newRow;
             column = newColumn;
 
-            matriz.changeSelection(row, column, false, false);
+            // Obtener el valor lógico de la nueva celda en la matriz `tablero`
+            int cellValue = tablero[row][column];
 
-            //obtener el valor de la celda a la que llegó el jugador
-            int cellValue = (int) matriz.getValueAt(row, column);
-
-            //las variables row y column indican la posición actual del jugador
-            System.out.println("El jugador llegó a la posición (" + row + ", " + column + ") con valor: " + cellValue);
-            String rowtemp;
-            String columntemp;
-            rowtemp = Integer.toString(row);
-            columntemp = Integer.toString(column);
-            rowtxt.setText(rowtemp);
-            columntxt.setText(columntemp);
-            String tes, strpunt;
-            if (cellValue == 1) {
-              matriz2.setValueAt(1, row, column);
-            }
-                if (cellValue == 2) {
-                    ct = ct + 1;
-                    tes = String.valueOf(ct);
-                    tesoros.setText(tes);
-                    punt = punt + 500;
-                    strpunt = String.valueOf(punt);
-                    puntaje_actual.setText(strpunt);
-                    matriz2.setValueAt(2, row, column);
-                }
-                if (cellValue == 3) {
-                    punt = punt - 200;
-                    strpunt = String.valueOf(punt);
-                    puntaje_actual.setText(strpunt);
-                    matriz2.setValueAt(3, row, column);
-                }
+            // Procesar según el valor lógico
+            if (cellValue == 2) { // Tesoro
+                ct++; // Incrementar tesoros encontrados
+                punt += 500; // Sumar puntos
+                model.setValueAt("X", row, column); // Marcar como tesoro encontrado
+                JOptionPane.showMessageDialog(null, "¡Encontró un tesoro!", "Alerta", JOptionPane.CLOSED_OPTION);
+            } else if (cellValue == 3) { // Trampa
+                punt -= 200; // Penalización por trampa
+                model.setValueAt("T", row, column); // Marcar como trampa encontrada
+                JOptionPane.showMessageDialog(null, "¡Cuidado, pisó una trampa!", "Alerta", JOptionPane.CLOSED_OPTION);
+            } else {
+                // Casilla vacía, colocar al jugador
+                model.setValueAt("P", row, column);
             }
 
+            // Actualizar la celda lógica en el tablero después de interactuar
+            tablero[row][column] = 1;
+
+            // Actualizar estadísticas en la interfaz
+            tesoros.setText(String.valueOf(ct));
+            puntaje_actual.setText(String.valueOf(punt));
+            rowtxt.setText(String.valueOf(row));
+            columntxt.setText(String.valueOf(column));
+
+            // Refrescar la tabla para asegurarse de que se reflejen los cambios
+            matriz2.repaint();
         }
-        /**
-         * @param args the command line arguments
-         */
+    }
+
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -700,7 +681,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JButton btn_prompt;
     private javax.swing.JTextField columntxt;
     private javax.swing.JButton down;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton exit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -709,18 +690,15 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton left;
     private javax.swing.JTable matriz;
     private javax.swing.JTable matriz2;
     private javax.swing.JLabel nombretxt;
     private javax.swing.JTextArea output;
-    private javax.swing.JTextPane prompt;
     private javax.swing.JTextField puntaje_actual;
     private javax.swing.JButton right;
     private javax.swing.JTextField rowtxt;
@@ -728,7 +706,7 @@ public class GUI_Juego extends javax.swing.JFrame {
     private javax.swing.JButton up;
     // End of variables declaration//GEN-END:variables
 
-    public static String ollama(String nombremodelo, String promptText) {
+    public static String ollama(String nombremodelo, String promptText, int[][] tablero) {
         double inicio = System.currentTimeMillis(); // Marca de tiempo de inicio
         try {
             URL url = new URL("http://localhost:11434/api/generate");
@@ -738,10 +716,30 @@ public class GUI_Juego extends javax.swing.JFrame {
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
 
-            String jsonInputString = String.format(
-                    "{\"model\": \"%s\", \"prompt\": \"Por favor, responde siempre en español. %s\", \"stream\": false}",
-                    nombremodelo, promptText);
+            // Serializar el tablero a formato JSON
+            StringBuilder tableroString = new StringBuilder();
+            tableroString.append("[");
+            for (int i = 0; i < tablero.length; i++) {
+                tableroString.append("[");
+                for (int j = 0; j < tablero[i].length; j++) {
+                    tableroString.append(tablero[i][j]);
+                    if (j < tablero[i].length - 1) {
+                        tableroString.append(",");
+                    }
+                }
+                tableroString.append("]");
+                if (i < tablero.length - 1) {
+                    tableroString.append(",");
+                }
+            }
+            tableroString.append("]");
 
+            // Construir el mensaje para la API
+            String jsonInputString = String.format(
+                    "{\"model\": \"%s\", \"prompt\": \"Tablero del juego: %s. %s\", \"stream\": false}",
+                    nombremodelo, tableroString.toString(), promptText);
+
+            // Enviar la solicitud
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
@@ -752,7 +750,6 @@ public class GUI_Juego extends javax.swing.JFrame {
             if (errorMessage != null) {
                 return errorMessage;
             } else {
-
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
                 StringBuilder response = new StringBuilder();
@@ -767,7 +764,6 @@ public class GUI_Juego extends javax.swing.JFrame {
 
                 return "Exitoso: " + responseText;
             }
-
         } catch (SocketTimeoutException e) {
             return "Error: Tiempo de espera de conexión o lectura excedido";
         } catch (MalformedURLException e) {
@@ -794,6 +790,24 @@ public class GUI_Juego extends javax.swing.JFrame {
             default:
                 return null;
         }
+    }
+
+    private void procesarPistas(String respuesta) {
+        // Buscar las coordenadas en la respuesta
+        Pattern pattern = Pattern.compile("\\[(\\d+),(\\d+)\\]");
+        Matcher matcher = pattern.matcher(respuesta);
+
+        while (matcher.find()) {
+            int fila = Integer.parseInt(matcher.group(1));
+            int columna = Integer.parseInt(matcher.group(2));
+
+            // Marcar la celda con una pista (por ejemplo, "?")
+            DefaultTableModel model = (DefaultTableModel) matriz2.getModel();
+            model.setValueAt("?", fila, columna);
+        }
+
+        // Refrescar la tabla
+        matriz2.repaint();
     }
 
 //llave que cierra todo
